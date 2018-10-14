@@ -6,7 +6,7 @@ import pickle as pkl
 #   _path - путь до файла
 #   file  - булева переменная (а есть ли вообще сам файл)
 #
-#   в случае отсутствия файла он создается в __init__, write и сеттере path
+#   в случае отсутствия файла он создается в __init__, "контекстной записи" и сеттере path
 #   в методах print_file и делетере path действий не производится
 #
 ###############################################################################
@@ -63,15 +63,19 @@ class FileWriter:
             print(ln)
         f.close()
 
-    def write(self, some_string):
+    def __enter__(self):
         if self._path == None:
             raise Exception("write(): there's no information")
         if not self._check_path(self._path):
             self.file = True
             os.system("touch " + self._path)
 
-        with open(self._path, 'a') as f:
-            f.write(some_string)
+        self.open_file = open(self.path, 'a')
+        return self.open_file
+
+    def __exit__(self, *args):
+        self.open_file.close()
+        del self.open_file
     
     def save_yourself(self, file_name):
         with open(file_name, 'wb') as dumpFile:
@@ -90,26 +94,3 @@ class FileWriter:
                 return res
             res.file = True
             return res
-
-
-###############################################################################
-#################################             #################################
-################################# - Тестики - #################################
-#################################             #################################
-###############################################################################
-
-#pt = "t.txt"
-#dp = "d.pkl"
-#f = FileWriter(pt)
-#f.write("new line")
-#f.print_file()
-#f.save_yourself(dp)
-#s = FileWriter.load_file_writer(dp)
-#s.print_file()
-#s.print_file()
-#del s.path
-#try:
-#    s.print_file() # Очевидно, тут должно выпасть исключение - ловим:
-#except:
-#    s.path = pt
-#s.print_file()
