@@ -1,0 +1,6 @@
+Server
+<br>Instruction</br>
+<br>Допустимые методы для адреса /get_classifier_result/&ltversion&gt GET и POST</br>
+<br>Читает из полученного запроса json-контент. В случае, если version==1, то должен вернуться json с версией и полем predict из входящего jsonа {"version":1, "predict":&ltpredict_value&gt}</br>
+<br>В случае, если version==0, то должен вернуться json с версией и полем old_predict из входящего jsonа {"version":0, "predict":&ltold_predict_value&gt}</br>
+
